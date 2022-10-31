@@ -1,0 +1,6 @@
+*.pyc
+params.txt
+
+/.vscode/
+/experiment records/
+/training records/
