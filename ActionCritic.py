@@ -12,8 +12,9 @@ class ActionCritic:
         self.__data_manager = data_manager
         self.__name = architecture.name
 
+        # TODO: implement reset for CNN
         critic_model = tf.keras.models.clone_model(architecture.value)
-        critic_model.compile(optimizer='adam', loss='mse', metrics=['mse'])
+        critic_model.compile(optimizer='adam', loss='mse', metrics=['mse'], jit_compile=True)
         self.__model = critic_model
 
         self.__model_verbosity = True if Settings.LogLevel == 0 else False
@@ -21,6 +22,7 @@ class ActionCritic:
     def get_name(self):
         return self.__name
 
+    @tf.function
     def train(self):
         self.__logger.print("ActionCritic(train): " + self.__name, LogLevel.INFO)
         if self.__data_manager.is_critic_training_ready():

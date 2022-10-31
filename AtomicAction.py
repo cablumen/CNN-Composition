@@ -24,13 +24,14 @@ class AtomicAction:
     def get_name(self):
         return self.__name
 
+    @tf.function
     def train(self):
         self.__logger.print("AtomicAction(train): " + self.__name, LogLevel.INFO)
         if self.__data_manager.is_actor_training_ready(self.__action_index):
             train_x, train_y, test_x, test_y = self.__data_manager.get_actor_data(self.__action_index)
             training_history = self.__model.fit(train_x, train_y, batch_size=Settings.BATCH_SIZE, epochs=Settings.EPOCHS, validation_data=(test_x, test_y), verbose=self.__model_verbosity)
             self.__logger.log_training(self.__id, training_history)
-        
+    
     def predict(self, state):
         self.__logger.print("AtomicAction(predict): " + self.__name, LogLevel.INFO)
         return self.__model.predict(state, verbose=self.__model_verbosity)
@@ -49,5 +50,5 @@ class AtomicAction:
 
     def reset(self):
         sub_model = tf.keras.models.clone_model(self.__architecture)
-        sub_model.compile(optimizer='adam', loss='mse', metrics=['mse'])
+        sub_model.compile(optimizer='adam', loss='mse', metrics=['mse'], jit_compile=True)
         self.__model = sub_model
