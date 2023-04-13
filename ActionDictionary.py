@@ -46,7 +46,8 @@ class ActionDictionary:
 
     def predict_actions(self, state_frame):
         predicted_next_frames = []
-        # TODO: predicted rewards are always 1
+        # TODO: multiple architectures converge to 0.5 in every value of delta next state...
+        # TODO: predicted next frames might be too similar for reward estimation
         predicted_rewards = []
         for action in self.__action_list:
             delta_next_state = action.predict(state_frame)
@@ -54,8 +55,6 @@ class ActionDictionary:
             predicted_next_frames.append(predicted_next_frame)
             predicted_rewards.append(self.__action_critic.predict(predicted_next_frame))
 
-        prediction_delta = np.subtract(predicted_next_frames[0], predicted_next_frames[1])
-        total_dif = np.sum(prediction_delta)
         optimal_action_index = np.argmax(predicted_rewards)
         optimal_next_state = predicted_next_frames[optimal_action_index]
         return optimal_action_index, optimal_next_state

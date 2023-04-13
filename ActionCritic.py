@@ -22,7 +22,7 @@ class ActionCritic:
     def get_name(self):
         return self.__name
 
-    @tf.function
+    # @tf.function
     def train(self):
         self.__logger.print("ActionCritic(train): " + self.__name, LogLevel.INFO)
         if self.__data_manager.is_critic_training_ready():

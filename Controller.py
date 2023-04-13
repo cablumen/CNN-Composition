@@ -40,14 +40,17 @@ class Controller:
 
                 next_state, reward, done, info = self.__env.step(action_index)
                 next_state_frame = self.get_env_frame()
-                action_dictionary.put_action_data(action_index, [state_frame, predicted_next_state_frame, next_state_frame, reward, done])
                 reward_for_episode += reward
+                action_dictionary.put_action_data(action_index, [state_frame, predicted_next_state_frame, next_state_frame, reward_for_episode, done])
                 state_frame = next_state_frame
                 
                 action_dictionary.train_models()
 
                 if done:
                     break
+
+            if episode > 190:
+                continue
 
             # reduce probability of random action
             if epsilon > Settings.EPSILON_MIN:
